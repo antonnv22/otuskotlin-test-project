@@ -1,23 +1,17 @@
 # Минимальная версия инфраструктуры на базе
-# OpenSearch - хранилище логов и метрик
-# OpenSearch Dashboards - отрисовка логов
-# Fluent Bit - служба сбора логов
-# Envoy - прокси
-# Keycloak - сервер идентификации
+# OpenSearch
+# OpenSearch Dashboards
+# Fluent Bit
 
-# Адреса:
-# Приложение доступно по http://localhost:8090 (envoy прокси)
-# Панели мониторинга http://localhost:5601 (opensearch dashboards, kibana)
-# Управление пользователями http://localhost:8081 (keycloak)
-
-#version: '3'
+version: '3'
 services:
 
   app:
     image: nginx:latest
+    ports:
+      - "8080:80"
     depends_on:
       - fluent-bit
-      - envoy
     volumes:
       - ./volumes/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./volumes/nginx/nginx.conf:/etc/nginx/nginx.conf
@@ -44,7 +38,6 @@ services:
       - opensearch_host=opensearch
       - opensearch_user=admin
       - opensearch_pass=admin
-    #      - opensearch_pass=adm-Password0
     volumes:
       - ./volumes/fluent-bit-etc/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
       - ./volumes/fluent-bit-etc/parsers.conf:/fluent-bit/etc/parsers.conf
@@ -57,19 +50,9 @@ services:
       - http.port=9200
       - bootstrap.memory_lock=true
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=adm-Password0
     ports:
       - '9200:9200'
       - '9600:9600'
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl -ku admin:admin https://localhost:9200/_cluster/health?pretty | grep status | grep -q '\\(green\\|yellow\\)'"
-        ]
-      interval: 5s
-      timeout: 5s
-      retries: 24
     ulimits:
       memlock:
         soft: -1
@@ -90,38 +73,7 @@ services:
     environment:
       OPENSEARCH_HOSTS: '["https://opensearch:9200"]'
     depends_on:
-      opensearch:
-        condition: service_healthy
-
-  envoy:
-    image: envoyproxy/envoy:v1.29.0  # Use the official Envoy proxy image
-    volumes:
-      - ./volumes/envoy/envoy.yaml:/etc/envoy/envoy.yaml  # Mount your Envoy configuration file
-    #      - ./envoy/certs:/etc/envoy/certs  # Mount your TLS certificates
-    ports:
-      - "15001:15001"
-      - "8090:8090"
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    ports:
-      - "8081:8080"
-    volumes:
-      #      - ./keycloak:/tmp
-      - ./volumes/keycloak/import:/opt/keycloak/data/import
-    #      - ./keycloak/standalone.xml:/opt/jboss/keycloak/standalone/configuration/standalone.xml
-    #      - ./keycloak/certs/keycloak.jks:/etc/x509/https/keystore  # Mount your Keycloak keystore
-    environment:
-      KEYCLOAK_USER: otus
-      KEYCLOAK_PASSWORD: otus
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      KEYCLOAK_IMPORT: "/tmp/realm-export.json"
-    command:
-      - start-dev
-      #      - --features admin-fine-grained-authz
-      - --hostname-port=8081
-      - --import-realm
+      - opensearch
 
 volumes:
   opensearch-data:
