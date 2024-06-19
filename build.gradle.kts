@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "ru.otus.otuskotlin.calendar"
-version = "1.0-SNAPSHOT"
+version = "0.0.1"
 
 repositories {
     mavenCentral()
@@ -16,4 +16,11 @@ subprojects {
     }
     group = rootProject.group
     version = rootProject.version
+}
+
+tasks {
+    create("check") {
+        group = "verification"
+        dependsOn(gradle.includedBuild("calendar-be").task(":check"))
+    }
 }

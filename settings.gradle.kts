@@ -11,4 +11,5 @@ plugins {
 rootProject.name = "otuskotlin-test-project"
 
 includeBuild("calendar-be")
+includeBuild("calendar-libs")
 //includeBuild("lessons")

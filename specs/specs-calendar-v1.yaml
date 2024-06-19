@@ -1,0 +1,405 @@
+openapi: 3.0.3
+info:
+  title: "Calendar ${VERSION_APP}"
+  description: The application Calendar is a digital tool that allows users to organize and manage their schedules, events, appointments, and tasks
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+tags:
+  - name: event
+    description: Событие в календаре
+paths:
+  /event/create:
+    post:
+      tags:
+        - event
+      summary: Create event
+      operationId: eventCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventCreateResponse'
+  /event/read:
+    post:
+      tags:
+        - event
+      summary: Read event
+      operationId: eventRead
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventReadRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventReadResponse'
+  /event/update:
+    post:
+      tags:
+        - event
+      summary: Update event
+      operationId: eventUpdate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventUpdateResponse'
+  /event/delete:
+    post:
+      tags:
+        - event
+      summary: Delete event
+      operationId: eventDelete
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDeleteResponse'
+  /event/search:
+    post:
+      tags:
+        - event
+      summary: Search event
+      operationId: eventSearch
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventSearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventSearchResponse'
+
+components:
+  schemas:
+
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+      discriminator:
+        propertyName: requestType
+        mapping:
+          create: '#/components/schemas/EventCreateRequest'
+          read:   '#/components/schemas/EventReadRequest'
+          update: '#/components/schemas/EventUpdateRequest'
+          delete: '#/components/schemas/EventDeleteRequest'
+          search: '#/components/schemas/EventSearchRequest'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        group:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/EventCreateResponse'
+          read:   '#/components/schemas/EventReadResponse'
+          update: '#/components/schemas/EventUpdateResponse'
+          delete: '#/components/schemas/EventDeleteResponse'
+          search: '#/components/schemas/EventSearchResponse'
+          init: '#/components/schemas/EventInitResponse'
+
+
+    UserId:
+      type: string
+      description: Идентификатор пользователя
+    EventId:
+      type: string
+      description: Идентификатор события
+    EventLock:
+      type: string
+      description: Версия оптимистичной блокировки
+
+    BaseEvent:
+      type: object
+      description: Объект описывает свойства, одинаковые для create и update
+      properties:
+        title:
+          type: string
+          description: Заголовок события
+        description:
+          type: string
+          description: Описание события
+        visibility:
+          $ref: '#/components/schemas/EventVisibility'
+
+    EventVisibility:
+      type: string
+      description: 'Тип видимости события. Возможные значения: видит только владелец, только зарегистрированный в 
+      системе пользователь, видимо всем'
+      enum:
+        - ownerOnly
+        - registeredOnly
+        - public
+
+    EventInitResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+
+    EventCreateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+
+    EventCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/EventRequestDebug'
+        - type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/EventCreateObject'
+
+    EventReadObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/EventId'
+
+    EventReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/EventRequestDebug'
+        - type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/EventReadObject'
+
+    EventUpdateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/EventId'
+            lock:
+              $ref: '#/components/schemas/EventLock'
+
+    EventUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/EventRequestDebug'
+        - type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/EventUpdateObject'
+
+    EventDeleteObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/EventId'
+            lock:
+              $ref: '#/components/schemas/EventLock'
+
+    EventDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/EventRequestDebug'
+        - type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/EventDeleteObject'
+
+    EventSearchFilter:
+      type: object
+      description: Набор фильтров для поиска
+      properties:
+        searchString:
+          type: string
+          description: Поисковая строка, которая будет искаться в событиях
+
+    EventSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/EventRequestDebug'
+        - type: object
+          properties:
+            EventFilter:
+              $ref: '#/components/schemas/EventSearchFilter'
+
+    EventResponseObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - type: object
+          description: Объект, который возвращается в ответе бэкенда
+          properties:
+            id:
+              $ref: '#/components/schemas/EventId'
+            ownerId:
+              $ref: '#/components/schemas/UserId'
+            lock:
+              $ref: '#/components/schemas/EventLock'
+            permissions:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: '#/components/schemas/EventPermissions'
+
+    EventPermissions:
+      type: string
+      description: Доступы для клиента для операций над событием
+      enum:
+        - read
+        - update
+        - delete
+        - makeVisiblePublic
+        - makeVisibleOwn
+        - makeVisibleGroup
+
+    EventResponseSingle:
+      allOf:
+        - type: object
+          description: Ответ с одним объектом события
+          properties:
+            event:
+              $ref: '#/components/schemas/EventResponseObject'
+
+    EventResponseMulti:
+      allOf:
+        - type: object
+          description: Список найденных объектов
+          properties:
+            events:
+              type: array
+              items:
+                $ref: '#/components/schemas/EventResponseObject'
+
+    EventCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/EventResponseSingle'
+
+    EventReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/EventResponseSingle'
+
+    EventUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/EventResponseSingle'
+
+    EventDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/EventResponseSingle'
+
+    EventSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/EventResponseMulti'
+
+
+    # STUBS ======================
+    EventRequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    EventRequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/EventDebug'
+
+    EventDebug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/EventRequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/EventRequestDebugStubs'
+
+    EventRequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badId
+        - badTitle
+        - badDescription
+        - badVisibility
+        - cannotDelete
+        - badSearchString

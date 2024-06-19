@@ -1,0 +1,98 @@
+openapi: 3.0.4
+info:
+  title: Calendar log models
+  description: Log models for logging services of calendar
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+paths: {}
+
+components:
+  schemas:
+    CommonLogModel:
+      title: Общая модель лога
+      description: Общая модель лога для всех микросервисов системы
+      type: object
+      properties:
+        messageTime:
+          type: string
+        logId:
+          type: string
+        source:
+          type: string
+        event:
+          $ref: '#/components/schemas/CalendarLogModel'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorLogModel'
+
+# CalendarEventLogModel
+    CalendarLogModel:
+      title: Модель лога для микросервиса Calendar
+      type: object
+      properties:
+        requestId:
+          type: string
+        operation:
+          type: string
+          enum:
+            - create
+            - read
+            - update
+            - delete
+            - search
+            - init
+            - finish
+        requestEvent:
+          $ref: '#/components/schemas/EventLog'
+        requestFilter:
+          $ref: '#/components/schemas/EventFilterLog'
+        responseEvent:
+          $ref: '#/components/schemas/EventLog'
+        responseEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventLog'
+
+    ErrorLogModel:
+      title: Модель лога для ошибки
+      type: object
+      properties:
+        message:
+          type: string
+        field:
+          type: string
+        code:
+          type: string
+        level:
+          type: string
+
+    EventLog:
+      title: Модель лога для события
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        visibility:
+          type: string
+        ownerId:
+          type: string
+        permissions:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+
+    EventFilterLog:
+      title: Модель лога фильтра
+      properties:
+        searchString:
+          type: string
+        ownerId:
+          type: string
