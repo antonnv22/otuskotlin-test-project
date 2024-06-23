@@ -8,10 +8,11 @@
 
    1. Id
    2. Title
-   3. DateTimeBegin
-   4. DateTimeEnd
-   5. Place
-   6. Owner 
+   3. Description
+   4. DateTimeBegin
+   5. DateTimeEnd
+   6. Place
+   7. Owner 
 
 ## Функции (эндпониты)
 
