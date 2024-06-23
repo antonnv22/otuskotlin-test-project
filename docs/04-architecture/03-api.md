@@ -1,21 +1,18 @@
 # API
 
-## Функции (эндпониты)
-
-1. CRUDS (create, read, update, delete, search) для событий календаря (events)
-
-
-## Описание сущности event
+## Описание сущности event (Событие в календаре)
 
 Событие:
    - Описание: Представляет запланированное мероприятие или встречу, которое пользователь добавляет в календарь.
    - Атрибуты: Название, дата, время начала и окончания, место проведения.
 
-
-   1. EventId
+   1. Id
    2. Title
-   3. Owner
-   4. Date
-   5. BeginTime
-   6. EndTime
-   7. Place
+   3. DateTimeBegin
+   4. DateTimeEnd
+   5. Place
+   6. Owner 
+
+## Функции (эндпониты)
+
+1. CRUDS (create, read, update, delete, search) для событий календаря (events)
