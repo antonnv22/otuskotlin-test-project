@@ -1,0 +1,53 @@
+package ru.otus.otuskotlin.calendar.app.spring.controllers
+
+import org.springframework.web.bind.annotation.*
+import ru.otus.otuskotlin.calendar.api.v2.mappers.*
+import ru.otus.otuskotlin.calendar.api.v2.models.*
+import ru.otus.otuskotlin.calendar.biz.CalendarEventProcessor
+import ru.otus.otuskotlin.calendar.common.CalendarContext
+
+@Suppress("unused")
+@RestController
+@RequestMapping("v2/event")
+class EventControllerV2(private val processor: CalendarEventProcessor) {
+
+    @PostMapping("create")
+    suspend fun create(@RequestBody request: EventCreateRequest): EventCreateResponse {
+        val context = CalendarContext()
+        context.fromTransport(request)
+        processor.exec(context)
+        return context.toTransportCreate()
+    }
+
+    @PostMapping("read")
+    suspend fun read(@RequestBody request: EventReadRequest): EventReadResponse {
+        val context = CalendarContext()
+        context.fromTransport(request)
+        processor.exec(context)
+        return context.toTransportRead()
+    }
+
+    @PostMapping("update")
+    suspend fun update(@RequestBody request: EventUpdateRequest): EventUpdateResponse {
+        val context = CalendarContext()
+        context.fromTransport(request)
+        processor.exec(context)
+        return context.toTransportUpdate()
+    }
+
+    @PostMapping("delete")
+    suspend fun delete(@RequestBody request: EventDeleteRequest): EventDeleteResponse {
+        val context = CalendarContext()
+        context.fromTransport(request)
+        processor.exec(context)
+        return context.toTransportDelete()
+    }
+
+    @PostMapping("search")
+    suspend fun search(@RequestBody request: EventSearchRequest): EventSearchResponse {
+        val context = CalendarContext()
+        context.fromTransport(request)
+        processor.exec(context)
+        return context.toTransportSearch()
+    }
+}

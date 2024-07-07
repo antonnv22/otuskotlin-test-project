@@ -8,7 +8,7 @@ TOKEN=$(./keycloak-tokens.sh)
 #  -H "x-client-request-id: 1235" \
 #  -H "Content-Type: application/json" \
 #  http://localhost:8090/v1/create \
-#  -d '{"debug":{"mode":"stub","stub":"success"},"ad":{"title":"my title","description":"my description","adType":"demand","visibility":"public","productId":"23423423"}}'
+#  -d '{"debug":{"mode":"stub","stub":"success"},"event":{"title":"my title","description":"my description","visibility":"public"}}'
 
 curl -H "Authorization: Bearer ${TOKEN}" \
   -H "X-Request-ID: 1234" \
