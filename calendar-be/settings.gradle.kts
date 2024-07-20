@@ -36,5 +36,6 @@ include(":calendar-app-common")
 include(":calendar-stubs")
 
 include(":calendar-biz")
-
+include(":calendar-app-spring")
+include(":calendar-app-kafka")
 //include(":calendar-tmp")
