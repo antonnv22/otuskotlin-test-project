@@ -24,8 +24,17 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
 
-// Включает вот такую конструкцию
-//implementation(projects.m2l5Gradle.sub1.ssub1)
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-include(":calendar-tmp")
+include(":calendar-api-v1-jackson")
+include(":calendar-api-v1-mappers")
+include(":calendar-api-v2-kmp")
+include(":calendar-api-log1")
+
+include(":calendar-common")
+include(":calendar-app-common")
+include(":calendar-stubs")
+
+include(":calendar-biz")
+
+//include(":calendar-tmp")
