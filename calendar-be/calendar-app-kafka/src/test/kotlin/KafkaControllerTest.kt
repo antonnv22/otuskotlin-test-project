@@ -41,8 +41,10 @@ class KafkaControllerTest {
                     apiV1RequestSerialize(
                         EventCreateRequest(
                             event = EventCreateObject(
-                                title = "Дейли",
+                                title = "some testing event",
                                 description = "some testing event to check them all",
+                                start = "2024-08-23T19:00:00Z",
+                                end = "2024-08-23T19:30:00Z",
                                 visibility = EventVisibility.OWNER_ONLY,
                             ),
                             debug = EventDebug(
@@ -66,7 +68,10 @@ class KafkaControllerTest {
         val message = producer.history().first()
         val result = apiV1ResponseDeserialize<EventCreateResponse>(message.value())
         assertEquals(outputTopic, message.topic())
-        assertEquals("Дейли", result.event?.title)
+        assertEquals("some testing event", result.event?.title)
+        assertEquals("some testing event to check them all", result.event?.description)
+        assertEquals("2024-08-23T19:00:00Z", result.event?.start)
+        assertEquals("2024-08-23T19:30:00Z", result.event?.end)
     }
 
     companion object {

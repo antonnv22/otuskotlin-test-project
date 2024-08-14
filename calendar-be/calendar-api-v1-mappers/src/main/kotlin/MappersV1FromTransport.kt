@@ -97,6 +97,8 @@ private fun EventSearchFilter?.toInternal(): CalendarEventFilter = CalendarEvent
 private fun EventCreateObject.toInternal(): CalendarEvent = CalendarEvent(
     title = this.title ?: "",
     description = this.description ?: "",
+    start = this.start ?: "",
+    end = this.end ?: "",
     visibility = this.visibility.fromTransport(),
 )
 
@@ -104,6 +106,8 @@ private fun EventUpdateObject.toInternal(): CalendarEvent = CalendarEvent(
     id = this.id.toEventId(),
     title = this.title ?: "",
     description = this.description ?: "",
+    start = this.start ?: "",
+    end = this.end ?: "",
     visibility = this.visibility.fromTransport(),
     lock = lock.toAdLock(),
 )

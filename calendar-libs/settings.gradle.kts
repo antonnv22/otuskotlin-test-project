@@ -28,3 +28,5 @@ include(":calendar-lib-logging-common")
 include(":calendar-lib-logging-kermit")
 include(":calendar-lib-logging-logback")
 include(":calendar-lib-logging-socket")
+
+include(":calendar-lib-cor")

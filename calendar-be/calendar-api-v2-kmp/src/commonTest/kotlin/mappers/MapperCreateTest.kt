@@ -18,6 +18,8 @@ class MapperCreateTest {
             event = EventCreateObject(
                 title = "title",
                 description = "desc",
+                start = "2024-08-23T19:00:00Z",
+                end = "2024-08-23T19:30:00Z",
                 visibility = EventVisibility.PUBLIC,
             ),
         )
@@ -28,6 +30,9 @@ class MapperCreateTest {
         assertEquals(CalendarStubs.SUCCESS, context.stubCase)
         assertEquals(CalendarWorkMode.STUB, context.workMode)
         assertEquals("title", context.eventRequest.title)
+        assertEquals("desc", context.eventRequest.description)
+        assertEquals("2024-08-23T19:00:00Z", context.eventRequest.start)
+        assertEquals("2024-08-23T19:30:00Z", context.eventRequest.end)
         assertEquals(CalendarVisibility.VISIBLE_PUBLIC, context.eventRequest.visibility)
     }
 
@@ -39,6 +44,8 @@ class MapperCreateTest {
             eventResponse = CalendarEvent(
                 title = "title",
                 description = "desc",
+                start = "2024-08-23T19:00:00Z",
+                end = "2024-08-23T19:30:00Z",
                 visibility = CalendarVisibility.VISIBLE_PUBLIC,
             ),
             errors = mutableListOf(
@@ -56,6 +63,9 @@ class MapperCreateTest {
 
         assertEquals("title", req.event?.title)
         assertEquals("desc", req.event?.description)
+        assertEquals("2024-08-23T19:00:00Z", req.event?.start)
+        assertEquals("2024-08-23T19:30:00Z", req.event?.end)
+
         assertEquals(EventVisibility.PUBLIC, req.event?.visibility)
         assertEquals(1, req.errors?.size)
         assertEquals("err", req.errors?.firstOrNull()?.code)

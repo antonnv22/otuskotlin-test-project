@@ -15,6 +15,8 @@ class RequestV2SerializationTest {
         event = EventCreateObject(
             title = "event title",
             description = "event description",
+            start = "2024-08-23T19:00:00Z",
+            end = "2024-08-23T19:30:00Z",
             visibility = EventVisibility.PUBLIC,
         )
     )
@@ -26,6 +28,10 @@ class RequestV2SerializationTest {
         println(json)
 
         assertContains(json, Regex("\"title\":\\s*\"event title\""))
+        assertContains(json, Regex("\"description\":\\s*\"event description\""))
+        assertContains(json, Regex("\"start\":\\s*\"2024-08-23T19:00:00Z\""))
+        assertContains(json, Regex("\"end\":\\s*\"2024-08-23T19:30:00Z\""))
+
         assertContains(json, Regex("\"mode\":\\s*\"stub\""))
         assertContains(json, Regex("\"stub\":\\s*\"badTitle\""))
         assertContains(json, Regex("\"requestType\":\\s*\"create\""))
@@ -34,7 +40,6 @@ class RequestV2SerializationTest {
     @Test
     fun deserialize() {
         val json = apiV2Mapper.encodeToString(request)
-//        val obj = apiV2Mapper.decodeFromString<EventCreateRequest>(json) // Не добавляет дескриминатор
         val obj = apiV2Mapper.decodeFromString<IRequest>(json) as EventCreateRequest // Добавляет дескриминатор
 
         assertEquals(request, obj)

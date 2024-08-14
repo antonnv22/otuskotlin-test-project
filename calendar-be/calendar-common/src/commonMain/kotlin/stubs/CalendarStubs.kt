@@ -7,6 +7,8 @@ enum class CalendarStubs {
     BAD_ID,
     BAD_TITLE,
     BAD_DESCRIPTION,
+    BAD_START,
+    BAD_END,
     BAD_VISIBILITY,
     CANNOT_DELETE,
     BAD_SEARCH_STRING,
