@@ -11,19 +11,22 @@ class ResponseV2SerializationTest {
         event = EventResponseObject(
             title = "event title",
             description = "event description",
+            start = "2024-08-23T19:00:00Z",
+            end = "2024-08-23T19:30:00Z",
             visibility = EventVisibility.PUBLIC,
         )
     )
 
     @Test
     fun serialize() {
-//        val json = apiV2Mapper.encodeToString(EventRequestSerializer1, request)
-//        val json = apiV2Mapper.encodeToString(RequestSerializers.create, request)
         val json = apiV2Mapper.encodeToString(response)
 
         println(json)
 
         assertContains(json, Regex("\"title\":\\s*\"event title\""))
+        assertContains(json, Regex("\"description\":\\s*\"event description\""))
+        assertContains(json, Regex("\"start\":\\s*\"2024-08-23T19:00:00Z\""))
+        assertContains(json, Regex("\"end\":\\s*\"2024-08-23T19:30:00Z\""))
         assertContains(json, Regex("\"responseType\":\\s*\"create\""))
     }
 

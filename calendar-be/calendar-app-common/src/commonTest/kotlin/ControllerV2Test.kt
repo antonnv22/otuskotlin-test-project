@@ -15,6 +15,8 @@ class ControllerV2Test {
         event = EventCreateObject(
             title = "some event",
             description = "some description of some event",
+            start = "2024-08-23T19:00:00Z",
+            end = "2024-08-23T19:30:00Z",
             visibility = EventVisibility.PUBLIC,
         ),
         debug = EventDebug(mode = EventRequestDebugMode.STUB, stub = EventRequestDebugStubs.SUCCESS)

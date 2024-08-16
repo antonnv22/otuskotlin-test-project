@@ -14,6 +14,8 @@ class RequestV1SerializationTest {
         event = EventCreateObject(
             title = "event title",
             description = "event description",
+            start = "2024-08-23T19:00:00Z",
+            end = "2024-08-23T19:30:00Z",
             visibility = EventVisibility.PUBLIC,
         )
     )
@@ -23,6 +25,9 @@ class RequestV1SerializationTest {
         val json = apiV1Mapper.writeValueAsString(request)
 
         assertContains(json, Regex("\"title\":\\s*\"event title\""))
+        assertContains(json, Regex("\"description\":\\s*\"event description\""))
+        assertContains(json, Regex("\"start\":\\s*\"2024-08-23T19:00:00Z\""))
+        assertContains(json, Regex("\"end\":\\s*\"2024-08-23T19:30:00Z\""))
         assertContains(json, Regex("\"mode\":\\s*\"stub\""))
         assertContains(json, Regex("\"stub\":\\s*\"badTitle\""))
         assertContains(json, Regex("\"requestType\":\\s*\"create\""))

@@ -5,9 +5,11 @@ import ru.otus.otuskotlin.calendar.common.models.*
 object CalendarEventStubMeeting {
     val EVENT_1: CalendarEvent
         get() = CalendarEvent(
-            id = CalendarEventId("777"),
+            id = CalendarEventId("00001"),
             title = "Дейли",
             description = "Ежедневное дейли",
+            start = "2024-08-23T20:00:00Z",
+            end = "2024-08-23T20:30:00Z",
             ownerId = CalendarUserId("user-1"),
             visibility = CalendarVisibility.VISIBLE_PUBLIC,
             permissionsClient = mutableSetOf(

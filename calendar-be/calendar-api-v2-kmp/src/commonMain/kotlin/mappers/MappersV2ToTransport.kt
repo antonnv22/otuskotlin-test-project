@@ -60,6 +60,8 @@ private fun CalendarEvent.toTransportEvent(): EventResponseObject = EventRespons
     id = id.takeIf { it != CalendarEventId.NONE }?.asString(),
     title = title.takeIf { it.isNotBlank() },
     description = description.takeIf { it.isNotBlank() },
+    start = start.takeIf { it.isNotBlank() },
+    end = end.takeIf { it.isNotBlank() },
     ownerId = ownerId.takeIf { it != CalendarUserId.NONE }?.asString(),
     visibility = visibility.toTransportEvent(),
     permissions = permissionsClient.toTransportEvent(),

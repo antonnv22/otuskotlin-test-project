@@ -6,9 +6,7 @@ import ru.otus.otuskotlin.calendar.api.v1.models.IRequest
 import ru.otus.otuskotlin.calendar.api.v1.models.IResponse
 
 val apiV1Mapper = JsonMapper.builder().run {
-//    configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL)
-//    setSerializationInclusion(JsonInclude.Include.NON_NULL)
     build()
 }
 

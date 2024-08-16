@@ -197,6 +197,12 @@ components:
         description:
           type: string
           description: Описание события
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
         visibility:
           $ref: '#/components/schemas/EventVisibility'
 
