@@ -1,0 +1,28 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/v2/event/search",
+    "bodyPatterns": [
+      {"matchesJsonPath" : "$.eventFilter[?(@.searchString == 'Bolt')]"}
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "result": "success",
+      "events": [
+        {
+          "id": "123",
+          "title": "Selling Bolt",
+          "description": "Обсуждение технического задания",
+          "start": "2024-08-23T20:00:00Z",
+          "end": "2024-08-23T20:30:00Z",
+          "visibility": "public"
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

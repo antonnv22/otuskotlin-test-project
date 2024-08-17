@@ -3,6 +3,7 @@ package ru.otus.otuskotlin.calendar.biz
 import ru.otus.otuskotlin.calendar.biz.general.initStatus
 import ru.otus.otuskotlin.calendar.biz.general.operation
 import ru.otus.otuskotlin.calendar.biz.general.stubs
+import ru.otus.otuskotlin.calendar.biz.repo.*
 import ru.otus.otuskotlin.calendar.biz.stubs.*
 import ru.otus.otuskotlin.calendar.biz.validation.*
 import ru.otus.otuskotlin.calendar.common.CalendarContext
@@ -10,6 +11,8 @@ import ru.otus.otuskotlin.calendar.common.CalendarCorSettings
 import ru.otus.otuskotlin.calendar.common.models.CalendarCommand
 import ru.otus.otuskotlin.calendar.common.models.CalendarEventId
 import ru.otus.otuskotlin.calendar.common.models.CalendarEventLock
+import ru.otus.otuskotlin.calendar.common.models.CalendarState
+import ru.otus.otuskotlin.calendar.cor.chain
 import ru.otus.otuskotlin.calendar.cor.rootChain
 import ru.otus.otuskotlin.calendar.cor.worker
 
@@ -20,6 +23,7 @@ class CalendarEventProcessor(
 
     private val businessChain = rootChain<CalendarContext> {
         initStatus("Инициализация статуса")
+        initRepo("Инициализация репозитория")
 
         operation("Создание события", CalendarCommand.CREATE) {
             stubs("Обработка стабов") {
@@ -44,6 +48,12 @@ class CalendarEventProcessor(
                 validateEndNotEmpty("Проверка, что дата завершения события не пустое")
                 finishEventValidation("Завершение проверок")
             }
+            chain {
+                title = "Логика сохранения"
+                repoPrepareCreate("Подготовка объекта для сохранения")
+                repoCreate("Создание события в БД")
+            }
+            prepareResult("Подготовка ответа")
         }
         operation("Получить событие", CalendarCommand.READ) {
             stubs("Обработка стабов") {
@@ -64,6 +74,16 @@ class CalendarEventProcessor(
 
                 finishEventValidation("Успешное завершение процедуры валидации")
             }
+            chain {
+                title = "Логика чтения"
+                repoRead("Чтение события из БД")
+                worker {
+                    title = "Подготовка ответа для Read"
+                    on { state == CalendarState.RUNNING }
+                    handle { eventRepoDone = eventRepoRead }
+                }
+            }
+            prepareResult("Подготовка ответа")
         }
         operation("Изменить событие", CalendarCommand.UPDATE) {
             stubs("Обработка стабов") {
@@ -93,6 +113,14 @@ class CalendarEventProcessor(
 
                 finishEventValidation("Успешное завершение процедуры валидации")
             }
+            chain {
+                title = "Логика сохранения"
+                repoRead("Чтение события из БД")
+                checkLock("Проверяем консистентность по оптимистичной блокировке")
+                repoPrepareUpdate("Подготовка объекта для обновления")
+                repoUpdate("Обновление события в БД")
+            }
+            prepareResult("Подготовка ответа")
         }
         operation("Удалить событие", CalendarCommand.DELETE) {
             stubs("Обработка стабов") {
@@ -113,6 +141,14 @@ class CalendarEventProcessor(
                 validateLockProperFormat("Проверка формата lock")
                 finishEventValidation("Успешное завершение процедуры валидации")
             }
+            chain {
+                title = "Логика удаления"
+                repoRead("Чтение события из БД")
+                checkLock("Проверяем консистентность по оптимистичной блокировке")
+                repoPrepareDelete("Подготовка объекта для удаления")
+                repoDelete("Удаление события из БД")
+            }
+            prepareResult("Подготовка ответа")
         }
         operation("Поиск событий", CalendarCommand.SEARCH) {
             stubs("Обработка стабов") {
@@ -127,6 +163,8 @@ class CalendarEventProcessor(
 
                 finishEventFilterValidation("Успешное завершение процедуры валидации")
             }
+            repoSearch("Поиск события в БД по фильтру")
+            prepareResult("Подготовка ответа")
         }
     }.build()
 }

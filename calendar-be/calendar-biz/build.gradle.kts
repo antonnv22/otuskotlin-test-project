@@ -10,7 +10,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
 
-                implementation(libs.cor)
+                implementation(libs.calendar.cor)
 
                 implementation(project(":calendar-common"))
                 implementation(project(":calendar-stubs"))
@@ -22,6 +22,8 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
 
                 api(libs.coroutines.test)
+                implementation(projects.calendarRepoTests)
+                implementation(projects.calendarRepoInmemory)
             }
         }
         jvmMain {

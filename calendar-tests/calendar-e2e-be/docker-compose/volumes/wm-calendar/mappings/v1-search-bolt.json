@@ -1,0 +1,29 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/v1/event/search",
+    "bodyPatterns": [
+      {"matchesJsonPath" : "$.eventFilter[?(@.searchString == 'Retro')]"}
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "responseType": "search",
+      "result": "success",
+      "events": [
+        {
+          "id": "123",
+          "title": "Selling Bolt",
+          "description": "Обсуждение технического задания",
+          "start": "2024-08-23T20:00:00Z",
+          "end": "2024-08-23T20:30:00Z",
+          "visibility": "public"
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -12,4 +12,5 @@ rootProject.name = "otuskotlin-test-project"
 
 includeBuild("calendar-be")
 includeBuild("calendar-libs")
+includeBuild("calendar-tests")
 //includeBuild("lessons")

@@ -16,20 +16,12 @@ fun validationDescriptionCorrect(command: CalendarCommand, processor: CalendarEv
         command = command,
         state = CalendarState.NONE,
         workMode = CalendarWorkMode.TEST,
-        eventRequest = CalendarEvent(
-            id = stub.id,
-            title = "Технический созвон",
-            description = "Технический созвон",
-            start = "2024-08-23T19:00:00Z",
-            end = "2024-08-23T19:30:00Z",
-            visibility = CalendarVisibility.VISIBLE_PUBLIC,
-            lock = CalendarEventLock("123-234-abc-ABC"),
-        ),
+        eventRequest = CalendarEventStub.get(),
     )
     processor.exec(ctx)
     assertEquals(0, ctx.errors.size)
     assertNotEquals(CalendarState.FAILING, ctx.state)
-    assertEquals("Технический созвон", ctx.eventValidated.description)
+    assertEquals("Ежедневное дейли", ctx.eventValidated.description)
 }
 
 fun validationDescriptionTrim(command: CalendarCommand, processor: CalendarEventProcessor) = runTest {
@@ -37,15 +29,9 @@ fun validationDescriptionTrim(command: CalendarCommand, processor: CalendarEvent
         command = command,
         state = CalendarState.NONE,
         workMode = CalendarWorkMode.TEST,
-        eventRequest = CalendarEvent(
-            id = stub.id,
-            title = "Технический созвон",
-            description = " \n\tТехнический созвон \n\t",
-            start = "2024-08-23T19:00:00Z",
-            end = "2024-08-23T19:30:00Z",
-            visibility = CalendarVisibility.VISIBLE_PUBLIC,
-            lock = CalendarEventLock("123-234-abc-ABC"),
-        ),
+        eventRequest = CalendarEventStub.prepareResult {
+            description = " \n\t Технический созвон \n\t"
+        },
     )
     processor.exec(ctx)
     assertEquals(0, ctx.errors.size)
@@ -58,15 +44,9 @@ fun validationDescriptionEmpty(command: CalendarCommand, processor: CalendarEven
         command = command,
         state = CalendarState.NONE,
         workMode = CalendarWorkMode.TEST,
-        eventRequest = CalendarEvent(
-            id = stub.id,
-            title = "Технический созвон",
-            description = "",
-            start = "2024-08-23T19:00:00Z",
-            end = "2024-08-23T19:30:00Z",
-            visibility = CalendarVisibility.VISIBLE_PUBLIC,
-            lock = CalendarEventLock("123-234-abc-ABC"),
-        ),
+        eventRequest = CalendarEventStub.prepareResult {
+            description = ""
+        },
     )
     processor.exec(ctx)
     assertEquals(1, ctx.errors.size)
@@ -81,15 +61,9 @@ fun validationDescriptionSymbols(command: CalendarCommand, processor: CalendarEv
         command = command,
         state = CalendarState.NONE,
         workMode = CalendarWorkMode.TEST,
-        eventRequest = CalendarEvent(
-            id = stub.id,
-            title = "abc",
-            description = "!@#$%^&*(),.{}",
-            start = "2024-08-23T19:00:00Z",
-            end = "2024-08-23T19:30:00Z",
-            visibility = CalendarVisibility.VISIBLE_PUBLIC,
-            lock = CalendarEventLock("123-234-abc-ABC"),
-        ),
+        eventRequest = CalendarEventStub.prepareResult {
+            description = "!@#$%^&*(),.{}"
+        },
     )
     processor.exec(ctx)
     assertEquals(1, ctx.errors.size)

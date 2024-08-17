@@ -12,6 +12,7 @@ object CalendarEventStubMeeting {
             end = "2024-08-23T20:30:00Z",
             ownerId = CalendarUserId("user-1"),
             visibility = CalendarVisibility.VISIBLE_PUBLIC,
+            lock = CalendarEventLock("123-234-abc-ABC"),
             permissionsClient = mutableSetOf(
                 CalendarEventPermissionClient.READ,
                 CalendarEventPermissionClient.UPDATE,
