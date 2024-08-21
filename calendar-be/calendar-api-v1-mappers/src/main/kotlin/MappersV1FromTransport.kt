@@ -18,7 +18,7 @@ fun CalendarContext.fromTransport(request: IRequest) = when (request) {
 
 private fun String?.toEventId() = this?.let { CalendarEventId(it) } ?: CalendarEventId.NONE
 private fun String?.toEventWithId() = CalendarEvent(id = this.toEventId())
-private fun String?.toAdLock() = this?.let { CalendarEventLock(it) } ?: CalendarEventLock.NONE
+private fun String?.toEventLock() = this?.let { CalendarEventLock(it) } ?: CalendarEventLock.NONE
 
 private fun EventDebug?.transportToWorkMode(): CalendarWorkMode = when (this?.mode) {
     EventRequestDebugMode.PROD -> CalendarWorkMode.PROD
@@ -77,7 +77,7 @@ fun CalendarContext.fromTransport(request: EventDeleteRequest) {
 private fun EventDeleteObject?.toInternal(): CalendarEvent = if (this != null) {
     CalendarEvent(
         id = id.toEventId(),
-        lock = lock.toAdLock(),
+        lock = lock.toEventLock(),
     )
 } else {
     CalendarEvent()
@@ -109,7 +109,7 @@ private fun EventUpdateObject.toInternal(): CalendarEvent = CalendarEvent(
     start = this.start ?: "",
     end = this.end ?: "",
     visibility = this.visibility.fromTransport(),
-    lock = lock.toAdLock(),
+    lock = lock.toEventLock(),
 )
 
 private fun EventVisibility?.fromTransport(): CalendarVisibility = when (this) {
