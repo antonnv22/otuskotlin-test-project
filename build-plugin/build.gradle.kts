@@ -12,6 +12,10 @@ gradlePlugin {
             id = "build-kmp"
             implementationClass = "ru.otus.otuskotlin.calendar.plugin.BuildPluginMultiplatform"
         }
+        register("build-pgContainer") {
+            id = "build-pgContainer"
+            implementationClass = "ru.otus.otuskotlin.calendar.plugin.BuildPluginPgContainer"
+        }
     }
 }
 
@@ -20,13 +24,10 @@ repositories {
 }
 
 dependencies {
-    // enable Ktlint formatting
-//    add("detektPlugins", libs.plugin.detektFormatting)
-
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
-
     implementation(libs.plugin.kotlin)
-//    implementation(libs.plugin.dokka)
     implementation(libs.plugin.binaryCompatibilityValidator)
-//    implementation(libs.plugin.mavenPublish)
+    implementation(libs.testcontainers.postgres)
+    implementation(libs.testcontainers.core)
+    implementation(libs.db.postgres)
 }
