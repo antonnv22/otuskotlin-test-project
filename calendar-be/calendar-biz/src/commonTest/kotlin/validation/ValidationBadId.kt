@@ -4,6 +4,7 @@ import kotlinx.coroutines.test.runTest
 import ru.otus.otuskotlin.calendar.biz.CalendarEventProcessor
 import ru.otus.otuskotlin.calendar.common.CalendarContext
 import ru.otus.otuskotlin.calendar.common.models.*
+import ru.otus.otuskotlin.calendar.stubs.CalendarEventStub
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -13,13 +14,7 @@ fun validationIdCorrect(command: CalendarCommand, processor: CalendarEventProces
         command = command,
         state = CalendarState.NONE,
         workMode = CalendarWorkMode.TEST,
-        eventRequest = CalendarEvent(
-            id = CalendarEventId("123-234-abc-ABC"),
-            title = "Технический созвон",
-            description = "Технический созвон",
-            visibility = CalendarVisibility.VISIBLE_PUBLIC,
-            lock = CalendarEventLock("123-234-abc-ABC"),
-        ),
+        eventRequest = CalendarEventStub.get(),
     )
     processor.exec(ctx)
     assertEquals(0, ctx.errors.size)
@@ -31,13 +26,9 @@ fun validationIdTrim(command: CalendarCommand, processor: CalendarEventProcessor
         command = command,
         state = CalendarState.NONE,
         workMode = CalendarWorkMode.TEST,
-        eventRequest = CalendarEvent(
-            id = CalendarEventId(" \n\t 123-234-abc-ABC \n\t "),
-            title = "Технический созвон",
-            description = "Технический созвон",
-            visibility = CalendarVisibility.VISIBLE_PUBLIC,
-            lock = CalendarEventLock("123-234-abc-ABC"),
-        ),
+        eventRequest = CalendarEventStub.prepareResult {
+            id = CalendarEventId(" \n\t ${id.asString()} \n\t ")
+        },
     )
     processor.exec(ctx)
     assertEquals(0, ctx.errors.size)
@@ -49,13 +40,9 @@ fun validationIdEmpty(command: CalendarCommand, processor: CalendarEventProcesso
         command = command,
         state = CalendarState.NONE,
         workMode = CalendarWorkMode.TEST,
-        eventRequest = CalendarEvent(
-            id = CalendarEventId(""),
-            title = "Технический созвон",
-            description = "Технический созвон",
-            visibility = CalendarVisibility.VISIBLE_PUBLIC,
-            lock = CalendarEventLock("123-234-abc-ABC"),
-        ),
+        eventRequest = CalendarEventStub.prepareResult {
+            id = CalendarEventId("")
+        },
     )
     processor.exec(ctx)
     assertEquals(1, ctx.errors.size)
@@ -70,13 +57,9 @@ fun validationIdFormat(command: CalendarCommand, processor: CalendarEventProcess
         command = command,
         state = CalendarState.NONE,
         workMode = CalendarWorkMode.TEST,
-        eventRequest = CalendarEvent(
-            id = CalendarEventId("!@#\$%^&*(),.{}"),
-            title = "Технический созвон",
-            description = "Технический созвон",
-            visibility = CalendarVisibility.VISIBLE_PUBLIC,
-            lock = CalendarEventLock("123-234-abc-ABC"),
-        ),
+        eventRequest = CalendarEventStub.prepareResult {
+            id = CalendarEventId("!@#\$%^&*(),.{}")
+        },
     )
     processor.exec(ctx)
     assertEquals(1, ctx.errors.size)

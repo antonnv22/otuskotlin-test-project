@@ -17,10 +17,16 @@ fun Throwable.asCalendarError(
     exception = this,
 )
 
-inline fun CalendarContext.addError(vararg error: CalendarError) = errors.addAll(error)
+inline fun CalendarContext.addError(error: CalendarError) = errors.add(error)
+inline fun CalendarContext.addErrors(error: Collection<CalendarError>) = errors.addAll(error)
 
 inline fun CalendarContext.fail(error: CalendarError) {
     addError(error)
+    state = CalendarState.FAILING
+}
+
+inline fun CalendarContext.fail(errors: Collection<CalendarError>) {
+    addErrors(errors)
     state = CalendarState.FAILING
 }
 
@@ -39,4 +45,17 @@ inline fun errorValidation(
     group = "validation",
     message = "Validation error for field $field: $description",
     level = level,
+)
+
+
+inline fun errorSystem(
+    violationCode: String,
+    level: LogLevel = LogLevel.ERROR,
+    e: Throwable,
+) = CalendarError(
+    code = "system-$violationCode",
+    group = "system",
+    message = "System error occurred. Our stuff has been informed, please retry later",
+    level = level,
+    exception = e,
 )

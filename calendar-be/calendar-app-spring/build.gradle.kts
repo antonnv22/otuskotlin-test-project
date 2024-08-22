@@ -35,10 +35,18 @@ dependencies {
     // biz
     implementation(project(":calendar-biz"))
 
+    // DB
+    implementation(projects.calendarRepoStubs)
+    implementation(projects.calendarRepoInmemory)
+    implementation(projects.calendarRepoPostgres)
+    testImplementation(projects.calendarRepoCommon)
+    testImplementation(projects.calendarStubs)
+
     // tests
     testImplementation(kotlin("test-junit5"))
     testImplementation(libs.spring.test)
     testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.spring.mockk)
 
     // stubs
     testImplementation(project(":calendar-stubs"))
@@ -62,4 +70,5 @@ tasks {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    environment("CALENDAREVENT_DB", "test_db")
 }

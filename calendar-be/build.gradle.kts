@@ -33,4 +33,7 @@ tasks {
             dependsOn(subprojects.map {  it.getTasksByName(tsk,false)})
         }
     }
+    create("buildImages") {
+        dependsOn(project("calendar-app-spring").tasks.getByName("bootBuildImage"))
+    }
 }

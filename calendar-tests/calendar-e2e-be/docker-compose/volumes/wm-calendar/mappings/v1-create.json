@@ -1,0 +1,26 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/v1/event/create"
+  },
+
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "responseType": "create",
+      "result": "success",
+      "event": {
+        "id": "123",
+        "title": "{{{jsonPath request.body '$.event.title'}}}",
+        "description": "Обсуждение технического задания",
+        "start": "2024-08-23T20:00:00Z",
+        "end": "2024-08-23T20:30:00Z",
+        "visibility": "public"
+      }
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["response-template"]
+  }
+}

@@ -85,26 +85,26 @@ private fun CalendarEventPermissionClient.toTransportEvent() = when (this) {
     CalendarEventPermissionClient.DELETE -> EventPermissions.DELETE
 }
 
-private fun CalendarVisibility.toTransportEvent(): EventVisibility ? = when (this) {
+internal fun CalendarVisibility.toTransportEvent(): EventVisibility ? = when (this) {
     CalendarVisibility.VISIBLE_PUBLIC -> EventVisibility .PUBLIC
     CalendarVisibility.VISIBLE_TO_GROUP -> EventVisibility .REGISTERED_ONLY
     CalendarVisibility.VISIBLE_TO_OWNER -> EventVisibility .OWNER_ONLY
     CalendarVisibility.NONE -> null
 }
 
-private fun List<CalendarError>.toTransportErrors(): List<Error>? = this
+internal fun List<CalendarError>.toTransportErrors(): List<Error>? = this
     .map { it.toTransportEvent() }
     .toList()
     .takeIf { it.isNotEmpty() }
 
-private fun CalendarError.toTransportEvent() = Error(
+internal fun CalendarError.toTransportEvent() = Error(
     code = code.takeIf { it.isNotBlank() },
     group = group.takeIf { it.isNotBlank() },
     field = field.takeIf { it.isNotBlank() },
     message = message.takeIf { it.isNotBlank() },
 )
 
-private fun CalendarState.toResult(): ResponseResult? = when (this) {
+internal fun CalendarState.toResult(): ResponseResult? = when (this) {
     CalendarState.RUNNING -> ResponseResult.SUCCESS
     CalendarState.FAILING -> ResponseResult.ERROR
     CalendarState.FINISHING -> ResponseResult.SUCCESS

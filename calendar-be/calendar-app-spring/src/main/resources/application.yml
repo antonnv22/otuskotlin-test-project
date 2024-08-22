@@ -24,3 +24,11 @@ springdoc:
         url: specs-calendar-v1.yaml
       - name: v2
         url: specs-calendar-v2.yaml
+
+psql:
+  schema: public
+  database: "${CALENDAREVENTS_DB:calendar_events}"
+  host: "${CALENDAREVENTS_HOST:localhost}"
+  port: "${CALENDAREVENTS_PORT:5432}"
+  user: "${CALENDAREVENTS_USER:postgres}"
+  password: "${CALENDAREVENTS_PASS:calendar-pass}"

@@ -2,6 +2,7 @@ package ru.otus.otuskotlin.calendar.stubs
 
 import ru.otus.otuskotlin.calendar.common.models.CalendarEvent
 import ru.otus.otuskotlin.calendar.common.models.CalendarEventId
+import ru.otus.otuskotlin.calendar.common.models.CalendarUserId
 import ru.otus.otuskotlin.calendar.stubs.CalendarEventStubMeeting.EVENT_1
 
 object CalendarEventStub {

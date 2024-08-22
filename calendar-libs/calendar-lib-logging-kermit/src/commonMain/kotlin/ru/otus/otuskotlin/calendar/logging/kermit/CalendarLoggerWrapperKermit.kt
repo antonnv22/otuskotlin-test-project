@@ -34,7 +34,6 @@ class CalendarLoggerWrapperKermit(
         LogLevel.TRACE -> Severity.Verbose
     }
 
-    // TODO Нужно для data придумать сериализацию или трансформацию в map
     private inline fun formatMessage(
         msg: String = "",
         data: Any? = null,

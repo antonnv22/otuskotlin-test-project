@@ -82,7 +82,7 @@ private fun CalendarEventPermissionClient.toTransportEvent() = when (this) {
     CalendarEventPermissionClient.DELETE -> EventPermissions.DELETE
 }
 
-private fun CalendarVisibility.toTransportEvent(): EventVisibility? = when (this) {
+internal fun CalendarVisibility.toTransportEvent(): EventVisibility? = when (this) {
     CalendarVisibility.VISIBLE_PUBLIC -> EventVisibility.PUBLIC
     CalendarVisibility.VISIBLE_TO_GROUP -> EventVisibility.REGISTERED_ONLY
     CalendarVisibility.VISIBLE_TO_OWNER -> EventVisibility.OWNER_ONLY

@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  app-ktor:
+    image: calendar-app-ktor-x64:0.0.1
+    ports:
+      - "8080:8080"
+    environment:
+      DB_TYPE_PROD: "psql"
+      CALENDAREVENTS_HOST: "psql"
+      CALENDAREVENTS_PORT: 5432
+      CALENDAREVENTS_DB: "calendar_events"
+      CALENDAREVENTS_USER: "postgres"
+      CALENDAREVENTS_PASS: "calendar-pass"
+    depends_on:
+      psql:
+        condition: service_healthy
+      liquibase:
+        condition: service_completed_successfully
+
+  psql:
+    image: postgres
+    #    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "calendar-pass"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "calendar_events"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  liquibase:
+    image: liquibase/liquibase
+    volumes:
+      - ./volumes/liquibase-psql:/liquibase/changelog
+    depends_on:
+      psql:
+        condition: service_healthy
+    command: ["--defaults-file=/liquibase/changelog/liquibase.properties", "--search-path=/liquibase/changelog", "--url=jdbc:postgresql://psql:5432/calendar_events", "update"]
+
+#volumes:
+#  postgres_data:

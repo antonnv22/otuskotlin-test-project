@@ -1,0 +1,30 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/v1/event/search"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "responseType": "search",
+      "result": "success",
+      "events": [
+        {
+          "id": "123",
+          "title": "Selling Bolt",
+          "description": "Обсуждение технического задания",
+          "visibility": "public"
+        },
+        {
+          "id": "124",
+          "title": "Обсуждение",
+          "description": "Обсуждение технического задания",
+          "visibility": "public"
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
